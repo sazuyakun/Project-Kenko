@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Mic } from 'lucide-react';
-// import OpenAI from "openai";
-// import fs from "fs";
+import { AssemblyAI } from 'assemblyai';
 
-// const openai = new OpenAI();
+const ASSEMBLYAI_API_KEY = import.meta.env.ASSEMBLYAI_API_KEY;
 
 interface VoiceRecorderProps {
   onSendMessage: (message: string) => void;
@@ -116,13 +115,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
 
 
   const convertSpeechToText = async (audioUrl: string) => {
-    // const transcription = await openai.audio.transcriptions.create({
-    //   file: fs.createReadStream(audioUrl),
-    //   model: "whisper-1",
-    // });
-  
-    // console.log(transcription.text);
+    
   };
+  
 
   const handleRecordToggle = () => {
     if (isRecording) {
