@@ -18,7 +18,14 @@ llm = ChatGoogleGenerativeAI(
 
 )
 messages = [
-    SystemMessage("You are a medical chatbot, you shouldn't answer any other things other than medical related things. If at all the user is asking other things, just say that you are sorry and not capable of doing the task"),
+    SystemMessage("""
+        Greet the person whenever possible and also entertain personal information.
+        
+        You are a medical chatbot, you shouldn't answer any other things other than medical related things. If at all the user is asking other things, just say that you are sorry and not capable of doing the task
+        
+        Give your response in 1 to 2 sentences only.
+    """),
+    # SystemMessage("You are a helpful chatbot")
 ]
 
 @app.post("/llm")

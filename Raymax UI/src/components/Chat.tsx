@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Home, MessageSquare, Info, Mail, Upload, Mic } from 'lucide-react';
+import { Home, MessageSquare, Info, Mail, Upload, FileText, User } from 'lucide-react';
 import ChatBot from './ChatBot';
 import ImageUpload from './ImageUpload';
 import VoiceRecorder from './VoiceRecorder';
+import ReportAnalysis from './ReportAnalysis';
+import UserProfile from './UserProfile';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -11,14 +13,16 @@ function Chat() {
   const navigate = useNavigate();
 
   const sidebarItems = [
-    { icon: Home, label: 'Home' },
+    { icon: Home, label: 'Login/Signup' },
     { icon: MessageSquare, label: 'Chat' },
+    { icon: FileText, label: 'Report Analysis' },
+    { icon: User, label: 'User Profile' },
     { icon: Mail, label: 'Send us a mail' },
   ];
 
   const handleNavigation = (label: string) => {
     switch (label) {
-      case 'Home':
+      case 'Login/Signup':
         navigate('/home');
         break;
       case 'Send us a mail':
@@ -26,6 +30,19 @@ function Chat() {
         break;
       default:
         setActiveTab(label);
+    }
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'Chat':
+        return <ChatBot />;
+      case 'Report Analysis':
+        return <ReportAnalysis />;
+      case 'User Profile':
+        return <UserProfile />;
+      default:
+        return <ChatBot />;
     }
   };
 
@@ -51,7 +68,7 @@ function Chat() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="text-2xl font-bold gradient-text"
           >
-            Raymax
+            Kenko
           </motion.h1>
         </div>
         <nav>
@@ -83,12 +100,12 @@ function Chat() {
         >
           <h2 className="text-2xl font-bold">Welcome to</h2>
           <div className="bg-purple-600 text-white px-4 py-2 rounded-full inline-block mt-2 animate-float">
-            Raymax: Your personal AI Health Bot
+            Kenko: Your personal AI Health Bot
           </div>
         </motion.header>
 
         <main className="flex-1 p-4 overflow-y-auto rounded-tr-xl">
-          <ChatBot />
+          {renderContent()}
         </main>
 
         <motion.div
@@ -104,31 +121,33 @@ function Chat() {
         </motion.div>
       </div>
 
-      {/* Right Sidebar */}
-      <motion.div
-        initial={{ x: 300 }}
-        animate={{ x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-64 bg-gray-800 p-4"
-      >
-        <div className="mb-4">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-2 animate-float"
-          ></motion.div>
-          <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-xl font-bold text-center gradient-text"
-          >
-            Raymax
-          </motion.h2>
-        </div>
-        <ImageUpload />
-      </motion.div>
+      {/* Right Sidebar - Only show for Chat tab */}
+      {activeTab === 'Chat' && (
+        <motion.div
+          initial={{ x: 300 }}
+          animate={{ x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-64 bg-gray-800 p-4"
+        >
+          <div className="mb-4">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="w-16 h-16 bg-blue-500 rounded-full mx-auto mb-2 animate-float"
+            ></motion.div>
+            <motion.h2
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-xl font-bold text-center gradient-text"
+            >
+              Kenko
+            </motion.h2>
+          </div>
+          <ImageUpload />
+        </motion.div>
+      )}
     </div>
   );
 }

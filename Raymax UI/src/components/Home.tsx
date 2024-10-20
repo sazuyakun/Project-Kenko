@@ -35,7 +35,7 @@ const Home: React.FC = () => {
           style={{ zIndex: -1 }} // Ensure background animation has a lower z-index
         />
         <h2 className="text-3xl font-bold text-center gradient-text mb-8 animate-float">
-          {isLogin ? 'Login to Raymax' : 'Sign Up for Raymax'}
+          {isLogin ? 'Login to Kenko' : 'Sign Up for Kenko'}
         </h2>
         <form onSubmit={handleSubmit}>
           {!isLogin && (

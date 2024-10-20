@@ -37,7 +37,7 @@ const About: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-2xl font-semibold text-center text-purple-400 mb-8"
         >
-          "PROJECT RAYMAX"
+          "PROJECT KENKO"
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -45,7 +45,7 @@ const About: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.6 }}
           className="text-white text-lg leading-relaxed mb-8"
         >
-          Project RAYMAX is an innovative AI-powered health assistant designed to revolutionize 
+          Project KENKO is an innovative AI-powered health assistant designed to revolutionize 
           personal healthcare. Our mission is to provide accessible, accurate, and personalized 
           health information to users worldwide, leveraging cutting-edge artificial intelligence 
           and machine learning technologies.

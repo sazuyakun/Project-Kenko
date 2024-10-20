@@ -2,7 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mic } from 'lucide-react';
 import { AssemblyAI } from 'assemblyai';
 
-const ASSEMBLYAI_API_KEY = import.meta.env.ASSEMBLYAI_API_KEY;
+// const ASSEMBLYAI_API_KEY = import.meta.env.ASSEMBLYAI_API_KEY;
+const ASSEMBLYAI_API_KEY = 'd4f150019b0f4f739c0cec0940ff6873';
+const CLOUDINARY_UPLOAD_PRESET = 'Project-Kenko'; // Replace with your Cloudinary upload preset
+const CLOUDINARY_CLOUD_NAME = 'dzxgf75bh'; // Replace with your Cloudinary cloud name
 
 interface VoiceRecorderProps {
   onSendMessage: (message: string) => void;
@@ -16,6 +19,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+
+  const client = new AssemblyAI({ apiKey: ASSEMBLYAI_API_KEY });
 
   useEffect(() => {
     return () => {
@@ -38,8 +44,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
       mediaRecorderRef.current.ondataavailable = (e) => chunks.push(e.data);
       mediaRecorderRef.current.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
-        const audioUrl = URL.createObjectURL(blob);
-        await convertSpeechToText(audioUrl);
+        setAudioBlob(blob);
+        await uploadToCloudinary(blob); // Upload audio to Cloudinary automatically after stop
       };
 
       mediaRecorderRef.current.start();
@@ -48,11 +54,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
       drawWaveform();
     } catch (error) {
       console.error('Error starting recording:', error);
-      if (error instanceof DOMException && error.name === 'NotAllowedError') {
-        setError('Microphone access denied. Please allow microphone access and try again.');
-      } else {
-        setError('An error occurred while trying to start recording. Please try again.');
-      }
+      setError('An error occurred while trying to start recording. Please try again.');
     }
   };
 
@@ -68,56 +70,104 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
 
   const drawWaveform = () => {
     if (!analyserRef.current || !canvasRef.current) return;
-  
+
     const canvas = canvasRef.current;
     const canvasCtx = canvas.getContext('2d');
     const analyser = analyserRef.current;
     const bufferLength = analyser.fftSize;
     const dataArray = new Uint8Array(bufferLength);
-  
+
     const draw = () => {
       if (!canvasCtx) return;
-  
+
       analyser.getByteTimeDomainData(dataArray);
-  
+
       canvasCtx.fillStyle = 'rgb(16, 24, 39)';
       canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
-  
+
       canvasCtx.lineWidth = 2;
       canvasCtx.strokeStyle = 'rgb(155, 255, 255)';
-  
+
       canvasCtx.beginPath();
-  
+
       const sliceWidth = (canvas.width * 1.0) / bufferLength;
       let x = 0;
-  
+
       for (let i = 0; i < bufferLength; i++) {
         const v = dataArray[i] / 128.0;
         const y = (v * canvas.height) / 2;
-  
+
         if (i === 0) {
           canvasCtx.moveTo(x, y);
         } else {
           canvasCtx.lineTo(x, y);
         }
-  
+
         x += sliceWidth;
       }
-  
+
       canvasCtx.lineTo(canvas.width, canvas.height / 2);
       canvasCtx.stroke();
-  
+
       animationFrameRef.current = requestAnimationFrame(draw);
     };
-  
+
     draw();
   };
 
+  const uploadToCloudinary = async (audioBlob: Blob) => {
+    const formData = new FormData();
+    formData.append('file', audioBlob);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-  const convertSpeechToText = async (audioUrl: string) => {
-    
+    try {
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (data.secure_url) {
+        console.log('Uploaded Audio URL:', data.secure_url);
+        await convertSpeechToText(data.secure_url); // Convert to text automatically after upload
+      } else {
+        throw new Error('Failed to upload audio');
+      }
+    } catch (error) {
+      console.error('Error uploading to Cloudinary:', error);
+      setError('Error uploading to Cloudinary');
+    }
   };
-  
+
+  const convertSpeechToText = async (audioURL: string) => {
+    try {
+      console.log('Starting speech-to-text conversion');
+
+      const params = {
+        audio: audioURL, // Use the Cloudinary audio URL
+        speaker_labels: true, // Optional: include speaker labels if needed
+      };
+
+      const transcript = await client.transcripts.transcribe(params);
+
+      if (transcript.status === 'error') {
+        throw new Error(transcript.error);
+      }
+
+      console.log('Transcription completed:', transcript.text);
+      onSendMessage(transcript.text);
+
+      // Optional: Log speaker labels if included
+      if (transcript.utterances) {
+        transcript.utterances.forEach((utterance) => {
+          console.log(`Speaker ${utterance.speaker}: ${utterance.text}`);
+        });
+      }
+    } catch (error) {
+      console.error('Error converting speech to text:', error);
+      setError(`Error during speech-to-text conversion: ${error.message || 'Unknown error'}`);
+    }
+  };
 
   const handleRecordToggle = () => {
     if (isRecording) {
