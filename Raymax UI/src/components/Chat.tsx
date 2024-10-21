@@ -7,7 +7,7 @@ import ReportAnalysis from './ReportAnalysis';
 import UserProfile from './UserProfile';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import FindNearestHospital from './NearestHospital/FindNearestHospital.jsx'
+import FindNearestHospital from './NearestHospital/FindNearestHospital'
 
 function Chat() {
   const [activeTab, setActiveTab] = useState('Chat');
@@ -17,9 +17,9 @@ function Chat() {
     { icon: Home, label: 'Login/Signup' },
     { icon: MessageSquare, label: 'Chat' },
     { icon: FileText, label: 'Report Analysis' },
+    { icon: Map, label: 'Emergency Button' },
     { icon: User, label: 'User Profile' },
     { icon: Mail, label: 'Send us a mail' },
-    { icon: Map, label: 'Emergency Button' },  // Add Emergency Button with Map icon
   ];
 
   const handleNavigation = (label: string) => {
