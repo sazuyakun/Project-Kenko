@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, MessageSquare, Info, Mail, Upload, FileText, User } from 'lucide-react';
+import { Home, MessageSquare, Info, Mail, Upload, FileText, User, Map } from 'lucide-react';  // Import Map icon
 import ChatBot from './ChatBot';
 import ImageUpload from './ImageUpload';
 import VoiceRecorder from './VoiceRecorder';
@@ -7,6 +7,7 @@ import ReportAnalysis from './ReportAnalysis';
 import UserProfile from './UserProfile';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import FindNearestHospital from './NearestHospital/FindNearestHospital.jsx'
 
 function Chat() {
   const [activeTab, setActiveTab] = useState('Chat');
@@ -18,6 +19,7 @@ function Chat() {
     { icon: FileText, label: 'Report Analysis' },
     { icon: User, label: 'User Profile' },
     { icon: Mail, label: 'Send us a mail' },
+    { icon: Map, label: 'Emergency Button' },  // Add Emergency Button with Map icon
   ];
 
   const handleNavigation = (label: string) => {
@@ -41,6 +43,8 @@ function Chat() {
         return <ReportAnalysis />;
       case 'User Profile':
         return <UserProfile />;
+      case 'Emergency Button': // Add content for Emergency Button if needed
+        return <FindNearestHospital/>
       default:
         return <ChatBot />;
     }
@@ -104,7 +108,7 @@ function Chat() {
           </div>
         </motion.header>
 
-        <main className="flex-1 p-4 overflow-y-auto rounded-tr-xl">
+        <main className="flex-1 p-4 overflow-y-auto rounded-tr-xl ">
           {renderContent()}
         </main>
 
