@@ -8,7 +8,7 @@ const API_URL = 'http://127.0.0.1:8080/llm';
 const ChatBot: React.FC = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loader state for both speech-to-text and chatbot
 
   const handleSend = async (message: string) => {
     if (message.trim()) {
@@ -21,9 +21,7 @@ const ChatBot: React.FC = () => {
         const response = await axios.post(API_URL, { user: userMessage }, {
           headers: {
             'Content-Type': 'application/json',
-            // 'Origin': window.location.origin,
           },
-          // withCredentials: true,
         });
 
         const botMessage = { role: 'human', content: response.data.agent };
@@ -68,12 +66,12 @@ const ChatBot: React.FC = () => {
         ))}
         {isLoading && (
           <div className="text-center">
-            <span className="inline-block animate-pulse">Thinking...</span>
+            <span className="inline-block animate-pulse">Processing...</span>
           </div>
         )}
       </div>
       <div className="mt-4 flex items-center">
-        <VoiceRecorder onSendMessage={handleSend} />
+        <VoiceRecorder onSendMessage={handleSend} setIsLoading={setIsLoading} />
         <input
           type="text"
           value={input}
@@ -81,12 +79,12 @@ const ChatBot: React.FC = () => {
           onKeyPress={(e) => e.key === 'Enter' && handleSend(input)}
           className="flex-1 bg-gray-700 text-white p-2 rounded-l-lg ml-2"
           placeholder="Type your message..."
-          disabled={isLoading}
+          disabled={isLoading} // Disable input during processing
         />
         <button
           onClick={() => handleSend(input)}
           className="bg-purple-600 text-white p-2 rounded-r-lg disabled:opacity-50"
-          disabled={isLoading}
+          disabled={isLoading} // Disable button during processing
         >
           <Send size={20} />
         </button>

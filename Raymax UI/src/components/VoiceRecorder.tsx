@@ -2,18 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mic } from 'lucide-react';
 import { AssemblyAI } from 'assemblyai';
 
-// const ASSEMBLYAI_API_KEY = import.meta.env.ASSEMBLYAI_API_KEY;
-const ASSEMBLYAI_API_KEY = '';
-const CLOUDINARY_UPLOAD_PRESET = 'Project-Kenko'; // Replace with your Cloudinary upload preset
-const CLOUDINARY_CLOUD_NAME = 'dzxgf75bh'; // Replace with your Cloudinary cloud name
+const ASSEMBLYAI_API_KEY = 'cecb6888fd07463eb35d335862a1e75a';
+const CLOUDINARY_UPLOAD_PRESET = 'Project-Kenko';
+const CLOUDINARY_CLOUD_NAME = 'dzxgf75bh';
 
 interface VoiceRecorderProps {
   onSendMessage: (message: string) => void;
+  setIsLoading: (loading: boolean) => void; // Pass down loading state handler
 }
 
-const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
+const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage, setIsLoading }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isConverting, setIsConverting] = useState(false); // Loading state for speech-to-text
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -129,6 +130,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
       const data = await response.json();
       if (data.secure_url) {
         console.log('Uploaded Audio URL:', data.secure_url);
+        setIsConverting(true); // Start the conversion process
+        setIsLoading(true); // Indicate loader in parent component
         await convertSpeechToText(data.secure_url); // Convert to text automatically after upload
       } else {
         throw new Error('Failed to upload audio');
@@ -144,8 +147,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
       console.log('Starting speech-to-text conversion');
 
       const params = {
-        audio: audioURL, // Use the Cloudinary audio URL
-        speaker_labels: true, // Optional: include speaker labels if needed
+        audio: audioURL,
+        speaker_labels: true,
       };
 
       const transcript = await client.transcripts.transcribe(params);
@@ -157,7 +160,6 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
       console.log('Transcription completed:', transcript.text);
       onSendMessage(transcript.text);
 
-      // Optional: Log speaker labels if included
       if (transcript.utterances) {
         transcript.utterances.forEach((utterance) => {
           console.log(`Speaker ${utterance.speaker}: ${utterance.text}`);
@@ -166,6 +168,9 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
     } catch (error) {
       console.error('Error converting speech to text:', error);
       setError(`Error during speech-to-text conversion: ${error.message || 'Unknown error'}`);
+    } finally {
+      setIsConverting(false);
+      setIsLoading(false); // Stop loader in parent component
     }
   };
 
@@ -185,6 +190,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
           className={`p-2 rounded-full ${
             isRecording ? 'bg-red-600' : 'bg-purple-600'
           } mr-2`}
+          disabled={isConverting} // Disable the button while converting
         >
           <Mic size={24} />
         </button>
@@ -192,6 +198,11 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage }) => {
       </div>
       {error && (
         <p className="text-red-500 text-sm mt-2">{error}</p>
+      )}
+      {isConverting && (
+        <div className="text-center mt-2">
+          <span className="inline-block animate-pulse">Converting Speech to Text...</span>
+        </div>
       )}
     </div>
   );
