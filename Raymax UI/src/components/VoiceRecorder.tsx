@@ -46,7 +46,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage, setIsLoadi
       mediaRecorderRef.current.onstop = async () => {
         const blob = new Blob(chunks, { type: 'audio/webm' });
         setAudioBlob(blob);
-        await uploadToCloudinary(blob); // Upload audio to Cloudinary automatically after stop
+        handleStopRecording(blob); // Call function to handle everything after stopping
       };
 
       mediaRecorderRef.current.start();
@@ -66,6 +66,10 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage, setIsLoadi
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+
+      // Start showing the loader immediately after stopping recording
+      setIsConverting(true);
+      setIsLoading(true);
     }
   };
 
@@ -116,6 +120,17 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage, setIsLoadi
     draw();
   };
 
+  const handleStopRecording = async (blob: Blob) => {
+    try {
+      await uploadToCloudinary(blob); // Upload the audio to Cloudinary
+    } catch (error) {
+      console.error('Error during stop recording:', error);
+      setError('An error occurred during processing.');
+      setIsConverting(false);
+      setIsLoading(false);
+    }
+  };
+
   const uploadToCloudinary = async (audioBlob: Blob) => {
     const formData = new FormData();
     formData.append('file', audioBlob);
@@ -130,15 +145,15 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage, setIsLoadi
       const data = await response.json();
       if (data.secure_url) {
         console.log('Uploaded Audio URL:', data.secure_url);
-        setIsConverting(true); // Start the conversion process
-        setIsLoading(true); // Indicate loader in parent component
-        await convertSpeechToText(data.secure_url); // Convert to text automatically after upload
+        await convertSpeechToText(data.secure_url); // Convert to text after upload
       } else {
         throw new Error('Failed to upload audio');
       }
     } catch (error) {
       console.error('Error uploading to Cloudinary:', error);
       setError('Error uploading to Cloudinary');
+      setIsConverting(false);
+      setIsLoading(false);
     }
   };
 
@@ -170,7 +185,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage, setIsLoadi
       setError(`Error during speech-to-text conversion: ${error.message || 'Unknown error'}`);
     } finally {
       setIsConverting(false);
-      setIsLoading(false); // Stop loader in parent component
+      setIsLoading(false); // Stop loader in parent component after conversion
     }
   };
 
@@ -190,7 +205,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSendMessage, setIsLoadi
           className={`p-2 rounded-full ${
             isRecording ? 'bg-red-600' : 'bg-purple-600'
           } mr-2`}
-          disabled={isConverting} // Disable the button while converting
+          disabled={isConverting} // Disable button while converting
         >
           <Mic size={24} />
         </button>
