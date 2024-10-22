@@ -7,12 +7,13 @@
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 2px;
+  padding-bottom: 80px;
 }
 
 .page-header {
   background-color: #8b5cf6;
   color: #fff;
-  padding: 20px;
+  padding: 5px;
   border-radius: 8px;
   margin-bottom: 20px;
 }
@@ -68,8 +69,11 @@
   padding: 20px;
   border-radius: 8px;
   color: #fff;
-  
+  height: auto; /* Keep the panel height */
+  overflow-y: auto; /* Enable vertical scrolling */
+  word-wrap: break-word; /* Break long words if necessary */
 }
+
 
 .panel h2 {
   margin-top: 0;

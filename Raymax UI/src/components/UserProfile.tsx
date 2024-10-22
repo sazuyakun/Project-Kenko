@@ -55,8 +55,8 @@ const UserProfile: React.FC = () => {
           <User size={32} className="text-white" />
         </div>
         <div>
-          <h2 className="text-2xl font-bold gradient-text">John Doe</h2>
-          <p className="text-gray-400">Age: 35 | Gender: Male | Blood Type: O+</p>
+          <h2 className="text-2xl font-bold gradient-text">Anmol Mangaraj</h2>
+          <p className="text-gray-400">Age: 20 | Gender: Male | Blood Type: A+</p>
         </div>
       </motion.div>
 

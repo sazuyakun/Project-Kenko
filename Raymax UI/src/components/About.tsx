@@ -29,7 +29,7 @@ const About: React.FC = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-4xl font-bold text-center gradient-text mb-4 animate-float"
         >
-          Team Plutonium
+          Team Astatine
         </motion.h1>
         <motion.h2
           initial={{ opacity: 0 }}
