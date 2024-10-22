@@ -181,7 +181,7 @@ const FitbitDashboard = () => {
             )}
           </DashboardCard>
 
-          <DashboardCard title="Devices" icon={BedIcon}>
+          <DashboardCard title="Sleep Tracking" icon={BedIcon}>
           {profile ? (
               <div className="space-y-2 text-center"> 
                 <p className="text-gray-500"><strong>Sleep Tracking: </strong>{profile.sleepTracking}</p>

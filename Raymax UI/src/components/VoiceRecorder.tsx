@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mic } from 'lucide-react';
 import { AssemblyAI } from 'assemblyai';
 
-const ASSEMBLYAI_API_KEY = 'cecb6888fd07463eb35d335862a1e75a';
+const ASSEMBLYAI_API_KEY = 'd4f150019b0f4f739c0cec0940ff6873';
 const CLOUDINARY_UPLOAD_PRESET = 'Project-Kenko';
 const CLOUDINARY_CLOUD_NAME = 'dzxgf75bh';
 
