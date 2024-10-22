@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, MessageSquare, Info, Mail, Upload, FileText, User, Map } from 'lucide-react';  // Import Map icon
+import { Home, MessageSquare, Info, Mail, Upload, FileText, User, Map, StepBack, WatchIcon } from 'lucide-react';  // Import Map icon
 import ChatBot from './ChatBot';
 import ImageUpload from './ImageUpload';
 import VoiceRecorder from './VoiceRecorder';
@@ -8,6 +8,7 @@ import UserProfile from './UserProfile';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import FindNearestHospital from './NearestHospital/FindNearestHospital.jsx'
+import FitbitDashboard from './FitbitDashboard.jsx';
 
 function Chat() {
   const [activeTab, setActiveTab] = useState('Chat');
@@ -19,7 +20,8 @@ function Chat() {
     { icon: FileText, label: 'Report Analysis' },
     { icon: User, label: 'User Profile' },
     { icon: Mail, label: 'Send us a mail' },
-    { icon: Map, label: 'Emergency Button' },  // Add Emergency Button with Map icon
+    { icon: Map, label: 'Emergency Button' }, 
+    { icon: WatchIcon, label:'Wearable Devices'} // Add Emergency Button with Map icon
   ];
 
   const handleNavigation = (label: string) => {
@@ -45,6 +47,8 @@ function Chat() {
         return <UserProfile />;
       case 'Emergency Button': // Add content for Emergency Button if needed
         return <FindNearestHospital/>
+      case 'Wearable Devices':
+        return <FitbitDashboard/>
       default:
         return <ChatBot />;
     }
@@ -119,7 +123,7 @@ function Chat() {
           className="bg-gray-800 p-4 flex justify-between items-center"
         >
           <div className="ml-auto flex items-center justify-end">
-            <span className="mr-2">John Doe</span>
+            <span className="mr-2">Anmol Mangaraj</span>
             <div className="w-10 h-10 bg-purple-200 rounded-full"></div>
           </div>
         </motion.div>

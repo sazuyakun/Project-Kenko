@@ -3,7 +3,7 @@ import { Mic } from 'lucide-react';
 import { AssemblyAI } from 'assemblyai';
 
 // const ASSEMBLYAI_API_KEY = import.meta.env.ASSEMBLYAI_API_KEY;
-const ASSEMBLYAI_API_KEY = '';
+const ASSEMBLYAI_API_KEY = 'd4f150019b0f4f739c0cec0940ff6873';
 const CLOUDINARY_UPLOAD_PRESET = 'Project-Kenko'; // Replace with your Cloudinary upload preset
 const CLOUDINARY_CLOUD_NAME = 'dzxgf75bh'; // Replace with your Cloudinary cloud name
 
