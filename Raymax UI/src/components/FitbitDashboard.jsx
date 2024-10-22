@@ -119,7 +119,7 @@ const FitbitDashboard = () => {
   return (
     <div className="p-4 max-w-6xl mx-auto space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-extrabold text-gray-800">Fitbit Dashboard</h1>
+        <h1 className="text-3xl font-extrabold text-gray-400">Fitbit Dashboard</h1>
         <button 
           onClick={handleAuthorize}
           className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"

@@ -58,45 +58,47 @@ function Chat() {
     <div className="flex h-screen bg-gray-900 text-white">
       {/* Sidebar */}
       <motion.div
-        initial={{ x: -300 }}
-        animate={{ x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-64 bg-purple-900 p-4"
+  initial={{ x: -300 }}
+  animate={{ x: 0 }}
+  transition={{ duration: 0.5 }}
+  className="w-64 bg-purple-900 p-4"
+>
+  <div className="mb-8">
+    <motion.img
+      src="https://res.cloudinary.com/dzxgf75bh/image/upload/v1729598461/Team_Astatine_1_codw4c.png"  
+      alt="Kenko Logo"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="w-[80px] h-[80px] rounded-full mb-2 animate-pulse-glow" // Adjust size as needed
+    />
+    <motion.h1
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5, delay: 0.4 }}
+      className="text-3xl font-bold gradient-text"
+    >
+      Kenko
+    </motion.h1>
+  </div>
+  <nav>
+    {sidebarItems.map((item, index) => (
+      <motion.button
+        key={item.label}
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+        className={`flex items-center w-full p-2 mb-2 rounded ${
+          activeTab === item.label ? 'bg-purple-700' : 'hover:bg-purple-800'
+        } transition-all duration-300`}
+        onClick={() => handleNavigation(item.label)}
       >
-        <div className="mb-8">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-12 h-12 bg-purple-700 rounded-full mb-2 animate-pulse-glow"
-          ></motion.div>
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="text-2xl font-bold gradient-text"
-          >
-            Kenko
-          </motion.h1>
-        </div>
-        <nav>
-          {sidebarItems.map((item, index) => (
-            <motion.button
-              key={item.label}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`flex items-center w-full p-2 mb-2 rounded ${
-                activeTab === item.label ? 'bg-purple-700' : 'hover:bg-purple-800'
-              } transition-all duration-300`}
-              onClick={() => handleNavigation(item.label)}
-            >
-              <item.icon className="mr-2" size={20} />
-              {item.label}
-            </motion.button>
-          ))}
-        </nav>
-      </motion.div>
+        <item.icon className="mr-2" size={20} />
+        {item.label}
+      </motion.button>
+    ))}
+  </nav>
+</motion.div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
